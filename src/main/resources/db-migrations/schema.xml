@@ -1,0 +1,492 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+          http://www.liquibase.org/xml/ns/dbchangelog
+          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.23.xsd">
+
+    <changeSet id="create-table-roles" author="TikhonovNS">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="roles"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="roles">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="code" type="varchar(50)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uq_roles_code"/>
+            </column>
+            <column name="name" type="varchar(100)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uq_roles_name"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-table-ticket_types" author="TikhonovNS">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="ticket_types"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="ticket_types">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="code" type="varchar(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="name" type="varchar(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="default_sla_hours" type="int">
+                <constraints nullable="false"
+                             checkConstraint="default_sla_hours > 0"/>
+            </column>
+        </createTable>
+
+    </changeSet>
+
+    <changeSet id="create-table-work_groups" author="TikhonovNS">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="work_groups"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="work_groups">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="code" type="varchar(100)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uq_work_groups_code"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uq_work_groups_name"/>
+            </column>
+            <column name="description" type="text"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-table-sections" author="TikhonovNS">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="sections"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="sections">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="code" type="varchar(100)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uq_sections_code"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uq_sections_name"/>
+            </column>
+            <column name="description" type="text"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-table-service_directions" author="TikhonovNS">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="service_directions"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="service_directions">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="section_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="code" type="varchar(100)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uq_service_directions_code"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="text"/>
+            <column name="default_ticket_type_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="service_directions"
+                                 baseColumnNames="section_id"
+                                 referencedTableName="sections"
+                                 referencedColumnNames="id"
+                                 onDelete="RESTRICT"
+                                 constraintName="fk_service_directions_section"/>
+
+        <addForeignKeyConstraint baseTableName="service_directions"
+                                 baseColumnNames="default_ticket_type_id"
+                                 referencedTableName="ticket_types"
+                                 referencedColumnNames="id"
+                                 onDelete="RESTRICT"
+                                 constraintName="fk_service_directions_ticket_type"/>
+
+        <addUniqueConstraint tableName="service_directions"
+                             columnNames="section_id, name"
+                             constraintName="uq_service_direction_name_per_section"/>
+    </changeSet>
+
+    <changeSet id="create-table-users" author="TikhonovNS">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="users"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="users">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="varchar(100)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uq_users_username"/>
+            </column>
+            <column name="password_hash" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="varchar(255)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uq_users_email"/>
+            </column>
+            <column name="last_name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="first_name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="middle_name" type="varchar(100)"/>
+            <column name="role_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="users"
+                                 baseColumnNames="role_id"
+                                 referencedTableName="roles"
+                                 referencedColumnNames="id"
+                                 onDelete="RESTRICT"
+                                 constraintName="fk_users_role"/>
+    </changeSet>
+
+    <changeSet id="create-table-user_work_groups" author="TikhonovNS">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="user_work_groups"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="user_work_groups">
+            <column name="user_id" type="bigint">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_user_work_groups"/>
+            </column>
+            <column name="work_group_id" type="bigint">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_user_work_groups"/>
+            </column>
+            <column name="created_at" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="user_work_groups"
+                                 baseColumnNames="user_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"
+                                 constraintName="fk_user_work_groups_user"/>
+
+        <addForeignKeyConstraint baseTableName="user_work_groups"
+                                 baseColumnNames="work_group_id"
+                                 referencedTableName="work_groups"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"
+                                 constraintName="fk_user_work_groups_work_group"/>
+    </changeSet>
+
+    <changeSet id="create-table-service_direction_work_groups" author="TikhonovNS">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="service_direction_work_groups"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="service_direction_work_groups">
+            <column name="service_direction_id" type="bigint">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_service_direction_work_groups"/>
+            </column>
+            <column name="work_group_id" type="bigint">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_service_direction_work_groups"/>
+            </column>
+            <column name="is_default" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="service_direction_work_groups"
+                                 baseColumnNames="service_direction_id"
+                                 referencedTableName="service_directions"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"
+                                 constraintName="fk_sdwg_service_direction"/>
+
+        <addForeignKeyConstraint baseTableName="service_direction_work_groups"
+                                 baseColumnNames="work_group_id"
+                                 referencedTableName="work_groups"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"
+                                 constraintName="fk_sdwg_work_group"/>
+    </changeSet>
+
+    <changeSet id="create-table-tickets" author="TikhonovNS">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="tickets"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="tickets">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="ticket_number" type="varchar(50)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uq_tickets_ticket_number"/>
+            </column>
+            <column name="initiator_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="section_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="service_direction_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ticket_type_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(50)">
+                <constraints nullable="false"
+                             checkConstraint="status IN ('NEW', 'IN_PROGRESS', 'UNASSIGNED', 'RESOLVED')"/>
+            </column>
+            <column name="work_group_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="assignee_id" type="bigint"/>
+            <column name="description" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="resolved_at" type="timestamp"/>
+            <column name="deadline" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="tickets"
+                                 baseColumnNames="initiator_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 onDelete="RESTRICT"
+                                 constraintName="fk_tickets_initiator"/>
+
+        <addForeignKeyConstraint baseTableName="tickets"
+                                 baseColumnNames="section_id"
+                                 referencedTableName="sections"
+                                 referencedColumnNames="id"
+                                 onDelete="RESTRICT"
+                                 constraintName="fk_tickets_section"/>
+
+        <addForeignKeyConstraint baseTableName="tickets"
+                                 baseColumnNames="service_direction_id"
+                                 referencedTableName="service_directions"
+                                 referencedColumnNames="id"
+                                 onDelete="RESTRICT"
+                                 constraintName="fk_tickets_service_direction"/>
+
+        <addForeignKeyConstraint baseTableName="tickets"
+                                 baseColumnNames="ticket_type_id"
+                                 referencedTableName="ticket_types"
+                                 referencedColumnNames="id"
+                                 onDelete="RESTRICT"
+                                 constraintName="fk_tickets_ticket_type"/>
+
+        <addForeignKeyConstraint baseTableName="tickets"
+                                 baseColumnNames="work_group_id"
+                                 referencedTableName="work_groups"
+                                 referencedColumnNames="id"
+                                 onDelete="RESTRICT"
+                                 constraintName="fk_tickets_work_group"/>
+
+        <addForeignKeyConstraint baseTableName="tickets"
+                                 baseColumnNames="assignee_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 onDelete="RESTRICT"
+                                 constraintName="fk_tickets_assignee"/>
+    </changeSet>
+
+    <changeSet id="create-table-comments" author="TikhonovNS">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="comments"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="comments">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="ticket_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="author_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="content" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_private" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="comments"
+                                 baseColumnNames="ticket_id"
+                                 referencedTableName="tickets"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"
+                                 constraintName="fk_comments_ticket"/>
+
+        <addForeignKeyConstraint baseTableName="comments"
+                                 baseColumnNames="author_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 onDelete="RESTRICT"
+                                 constraintName="fk_comments_author"/>
+    </changeSet>
+
+    <changeSet id="create-table-ticket_events" author="TikhonovNS">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="ticket_events"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="ticket_events">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="ticket_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="author_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="event_type" type="varchar(50)">
+                <constraints nullable="false"
+                             checkConstraint="event_type IN ('CREATED', 'STATUS_CHANGED', 'GROUP_ASSIGNED', 'COMMENT_ADDED', 'PRIVATE_COMMENT_ADDED', 'TYPE_CHANGED', 'SLA_RECALCULATED', 'EMPLOYEE_ASSIGNED')"/>
+            </column>
+            <column name="event_message" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="ticket_events"
+                                 baseColumnNames="ticket_id"
+                                 referencedTableName="tickets"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"
+                                 constraintName="fk_ticket_events_ticket"/>
+
+        <addForeignKeyConstraint baseTableName="ticket_events"
+                                 baseColumnNames="author_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 onDelete="RESTRICT"
+                                 constraintName="fk_ticket_events_author"/>
+    </changeSet>
+
+    <changeSet id="create-table-notifications" author="TikhonovNS">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="notifications"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="notifications">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ticket_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="title" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="message" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_read" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="notifications"
+                                 baseColumnNames="user_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"
+                                 constraintName="fk_notifications_user"/>
+
+        <addForeignKeyConstraint baseTableName="notifications"
+                                 baseColumnNames="ticket_id"
+                                 referencedTableName="tickets"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"
+                                 constraintName="fk_notifications_ticket"/>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: helpdesk
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/helpdesk}
+    username: ${SPRING_DATASOURCE_USERNAME:helpdesk_app}
+    password: ${SPRING_DATASOURCE_PASSWORD:helpdesk_app_password}
+
+  jpa:
+    show-sql: true
+    generate-ddl: false
+    hibernate:
+      ddl-auto: validate
+
+  liquibase:
+    enabled: true
+    change-log: classpath:db-migrations/changelog.xml
+    url: ${SPRING_LIQUIBASE_URL:jdbc:postgresql://localhost:5432/helpdesk}
+    user: ${SPRING_LIQUIBASE_USER:helpdesk_migrator}
+    password: ${SPRING_LIQUIBASE_PASSWORD:helpdesk_migrator_password}
+
+server:
+  port: 8090

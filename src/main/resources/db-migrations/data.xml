@@ -1,0 +1,108 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+          http://www.liquibase.org/xml/ns/dbchangelog
+          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.23.xsd">
+
+  <changeSet author="TikhonovNS" id="Populate-table-work_groups">
+
+    <insert tableName="work_groups">
+      <column name="id" value="1"/>
+      <column name="code" value="HELP_DESK_DISPATCHER"/>
+      <column name="name" value="help.desk.dispatcher"/>
+      <column name="description" value="A group for dispatchers of the help desk portal"/>
+    </insert>
+
+    <insert tableName="work_groups">
+      <column name="id" value="2"/>
+      <column name="code" value="HELP_DESK_SERVICE"/>
+      <column name="name" value="help.desk.service"/>
+      <column name="description" value="A group for administrators of the help desk portal"/>
+    </insert>
+
+  </changeSet>
+
+  <changeSet author="TikhonovNS" id="Populate-table-user_work_groups">
+
+    <insert tableName="user_work_groups">
+      <column name="user_id" value="2"/>
+      <column name="work_group_id" value="1"/>
+    </insert>
+
+    <insert tableName="user_work_groups">
+      <column name="user_id" value="3"/>
+      <column name="work_group_id" value="2"/>
+    </insert>
+
+  </changeSet>
+
+  <changeSet author="TikhonovNS" id="Populate-table-sections">
+
+    <insert tableName="sections">
+      <column name="code" value="CORPORATE_HELP_DESK"/>
+      <column name="name" value="Портал технической поддержки"/>
+      <column name="description" value="Раздел по работе с HD порталом."/>
+    </insert>
+
+    </changeSet>
+
+  <changeSet author="TikhonovNS" id="Populate-table-ticket_types">
+
+    <insert tableName="ticket_types">
+      <column name="code" value="SERVICE_REQUEST"/>
+      <column name="name" value="ЗНО"/>
+      <column name="default_sla_hours" value="72"/>
+    </insert>
+
+    <insert tableName="ticket_types">
+      <column name="code" value="CONSULTATION"/>
+      <column name="name" value="Консультация"/>
+      <column name="default_sla_hours" value="48"/>
+    </insert>
+
+    <insert tableName="ticket_types">
+      <column name="code" value="INCIDENT"/>
+      <column name="name" value="Инцидент"/>
+      <column name="default_sla_hours" value="72"/>
+    </insert>
+
+  </changeSet>
+
+  <changeSet author="TikhonovNS" id="Populate-table-service_direction">
+
+    <insert tableName="service_directions">
+      <column name="section_id" value="1"/>
+      <column name="code" value="CREATE_SECTION"/>
+      <column name="name" value="Добавить новый раздел"/>
+      <column name="description" value="Запрос на создание нового раздела на портале технической поддержки."/>
+      <column name="default_ticket_type_id" value="1"/>
+    </insert>
+
+    <insert tableName="service_directions">
+      <column name="section_id" value="1"/>
+      <column name="code" value="ERROR_IN_THE_PORTAL_OPERATION"/>
+      <column name="name" value="Ошибки в работе портала"/>
+      <column name="description" value="Запрос по решеию проблемы в работе портала технической поддержки."/>
+      <column name="default_ticket_type_id" value="1"/>
+    </insert>
+
+  </changeSet>
+
+  <changeSet author="TikhonovNS" id="Populate-table-service_direction_work_groups">
+
+    <insert tableName="service_direction_work_groups">
+      <column name="service_direction_id" value="1"/>
+      <column name="work_group_id" value="2"/>
+      <column name="is_default" value="true"/>
+    </insert>
+
+    <insert tableName="service_direction_work_groups">
+      <column name="service_direction_id" value="2"/>
+      <column name="work_group_id" value="2"/>
+      <column name="is_default" value="true"/>
+    </insert>
+
+  </changeSet>
+
+</databaseChangeLog>

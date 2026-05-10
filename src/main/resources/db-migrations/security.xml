@@ -1,0 +1,61 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+          http://www.liquibase.org/xml/ns/dbchangelog
+          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.23.xsd">
+
+  <changeSet author="TikhonovNS" id="Populate-table-roles">
+
+    <insert tableName="roles">
+      <column name="code" value="ROLE_INITIATOR"/>
+      <column name="name" value="Initiator"/>
+    </insert>
+
+    <insert tableName="roles">
+      <column name="code" value="ROLE_DISPATCHER"/>
+      <column name="name" value="Dispatcher"/>
+    </insert>
+
+    <insert tableName="roles">
+      <column name="code" value="ROLE_EXECUTOR"/>
+      <column name="name" value="Executor"/>
+    </insert>
+
+  </changeSet>
+
+  <changeSet author="TikhonovNS" id="Populate-table-users">
+
+    <insert tableName="users">
+      <column name="username" value="initiator_login"/>
+      <column name="password_hash" value="$2a$12$dCnnIDPewxVmn/bJ/1fyA.IjSIB891yiyKFqw.OeBOdiTqhAncLq6"/>
+      <column name="email" value="initiator@test_gmail.com"/>
+      <column name="last_name" value="Initiatorov"/>
+      <column name="first_name" value="Initiator"/>
+      <column name="middle_name" value="Initiatorovich"/>
+      <column name="role_id" value="1"/>
+    </insert>
+
+    <insert tableName="users">
+      <column name="username" value="dispatcher_login"/>
+      <column name="password_hash" value="$2a$12$La6RgLcO5vw9xaY6QShf1.VFA9uAwZXKPbJ1f9ypt7YQ3j6NOKFvu"/>
+      <column name="email" value="dispatcher@test_gmail.com"/>
+      <column name="last_name" value="Dispatcherov"/>
+      <column name="first_name" value="Dispatcher"/>
+      <column name="middle_name" value="Dispatcherovich"/>
+      <column name="role_id" value="2"/>
+    </insert>
+
+    <insert tableName="users">
+      <column name="username" value="executor_login"/>
+      <column name="password_hash" value="$2a$12$lxT363cbQXKpUSvhOtEmt.TzOahLVd.tym3Dh3r/XefvDh9wNnAR2"/>
+      <column name="email" value="executor@test_gmail.com"/>
+      <column name="last_name" value="Executorov"/>
+      <column name="first_name" value="Executor"/>
+      <column name="middle_name" value="Executorovich"/>
+      <column name="role_id" value="3"/>
+    </insert>
+
+  </changeSet>
+
+</databaseChangeLog>

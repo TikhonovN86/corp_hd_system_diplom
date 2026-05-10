@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ServiceDesk</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="app-shell">
+    <header class="topbar">
+        <div>
+            <div class="app-title">Корпоративный ServiceDesk</div>
+            <div id="userInfo" class="user-info">Загрузка пользователя...</div>
+        </div>
+
+        <div class="topbar-actions">
+            <button id="notificationsButton" class="icon-button hidden" type="button">
+                🔔 <span id="notificationBadge" class="badge hidden">0</span>
+            </button>
+            <form method="post" action="/logout">
+                <button class="secondary-button" type="submit">Выйти</button>
+            </form>
+        </div>
+    </header>
+
+    <main class="layout">
+        <section class="panel sidebar">
+            <div class="section-title">Обращения</div>
+
+            <div class="toolbar">
+                <label class="checkbox-row">
+                    <input id="hideResolvedCheckbox" type="checkbox">
+                    <span>Скрыть решённые</span>
+                </label>
+
+                <button id="refreshTicketsButton" class="secondary-button" type="button">Обновить</button>
+                <button id="createTicketOpenButton" class="primary-button hidden" type="button">Новое обращение</button>
+            </div>
+
+            <div id="ticketList" class="ticket-list"></div>
+        </section>
+
+        <section class="panel content">
+            <div id="emptyState" class="empty-state">
+                Выберите обращение из списка
+            </div>
+
+            <div id="ticketCard" class="hidden"></div>
+        </section>
+    </main>
+</div>
+
+<div id="modalOverlay" class="modal-overlay hidden">
+    <div class="modal">
+        <div class="modal-header">
+            <div id="modalTitle" class="modal-title"></div>
+            <button id="modalCloseButton" class="icon-button" type="button">✕</button>
+        </div>
+        <div id="modalBody" class="modal-body"></div>
+    </div>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+
+<script type="module" src="/js/app.js"></script>
+</body>
+</html>

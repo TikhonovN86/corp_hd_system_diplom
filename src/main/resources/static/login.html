@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ServiceDesk — Вход</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="login-page">
+<div class="login-card">
+    <div class="login-title">Корпоративный ServiceDesk</div>
+    <div class="login-subtitle">Вход в систему</div>
+
+    <div id="errorMessage" class="alert alert-error hidden">Неверный логин или пароль</div>
+    <div id="logoutMessage" class="alert alert-success hidden">Вы вышли из системы</div>
+
+    <form method="post" action="/login" class="login-form">
+        <label>
+            Логин
+            <input type="text" name="username" autocomplete="username" required>
+        </label>
+        <label>
+            Пароль
+            <input type="password" name="password" autocomplete="current-password" required>
+        </label>
+        <button class="primary-button full-width" type="submit">Войти</button>
+    </form>
+</div>
+
+<script>
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('error')) document.getElementById('errorMessage').classList.remove('hidden');
+    if (params.has('logout')) document.getElementById('logoutMessage').classList.remove('hidden');
+</script>
+</body>
+</html>
