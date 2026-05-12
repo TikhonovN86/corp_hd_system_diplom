@@ -1,0 +1,11 @@
+initiator:
+login: initiator_login
+password: initiator_password
+
+dispatcher:
+login: dispatcher_login
+password: dispatcher_password
+
+executor:
+login: executor_login
+password: executor_password
